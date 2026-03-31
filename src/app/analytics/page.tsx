@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { BarChart3, TrendingUp, Target, Lightbulb, Activity, Zap } from "lucide-react";
 import { MOCK_ANALYTICS } from "@/lib/mock-data";
-import { SectionHeader, StatCard, ProgressBar } from "@/components/UI";
+import { StatCard, ProgressBar } from "@/components/UI";
 import { BarChart, Heatmap } from "@/components/Charts";
 
 export default function Analytics() {

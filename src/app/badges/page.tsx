@@ -58,8 +58,8 @@ export default function Badges() {
               <motion.div key={badge.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.05 }} className="group relative border border-border-subtle bg-surface p-6 transition-all duration-300 overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 opacity-5 group-hover:opacity-15 transition-opacity blur-3xl" style={{ backgroundColor: `var(--color-${color})` }} />
                 <div className="flex items-start justify-between mb-6">
-                  <div className="w-14 h-14 border bg-obsidian flex items-center justify-center" style={{ borderColor: `var(--color-${color})33` }}>
-                    <Icon className="w-7 h-7" style={{ color: `var(--color-${color})` }} />
+                  <div className="w-14 h-14 border bg-obsidian flex items-center justify-center" style={{ borderColor: `var(--color-${color})33`, color: `var(--color-${color})` }}>
+                    <Icon className="w-7 h-7" />
                   </div>
                   <LevelBadge level={badge.level} />
                 </div>

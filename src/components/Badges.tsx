@@ -23,7 +23,7 @@ export function SkillBadge({ name, level, color = "neon-cyan", size = "md", show
     )}>
       <div className={cn("w-1.5 h-1.5 rounded-full", `bg-${color}`)} />
       <span>{name}</span>
-      {showLevel && <span className="text-neutral-500">// {level}</span>}
+      {showLevel && <span className="text-neutral-500">{`// ${level}`}</span>}
     </div>
   );
 }
