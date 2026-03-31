@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Award, Brain, Layout, Server, Palette, CheckCircle2, ExternalLink } from "lucide-react";
 import { MOCK_BADGES, SKILL_CATEGORIES, CATEGORY_COLORS } from "@/lib/mock-data";
-import { SectionHeader, FilterBar, StatCard } from "@/components/UI";
+import { FilterBar, StatCard } from "@/components/UI";
 import { LevelBadge } from "@/components/Badges";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {

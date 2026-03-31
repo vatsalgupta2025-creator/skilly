@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { Loader2, Terminal, CheckCircle2, AlertTriangle, Info, Award, TrendingUp } from "lucide-react";
+import { Loader2, Terminal, CheckCircle2, Info, Award, TrendingUp } from "lucide-react";
 
 const ANALYSIS_PHASES = [
   { phase: "Initialization", logs: ["Initializing Swarm Evaluator v3.1...", "Loading evaluation modules...", "Acquiring repository artifacts...", "Parsing file structure..."] },

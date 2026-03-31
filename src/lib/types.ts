@@ -5,12 +5,13 @@ export interface Project {
   id: string;
   title: string;
   description: string;
-  category: SkillCategory;
+  category: string;
   skills: string[];
   uploadedAt: string;
   status: "analyzing" | "verified" | "pending";
   files: ProjectFile[];
   evaluation?: Evaluation;
+  html_url?: string;
 }
 
 export interface ProjectFile {

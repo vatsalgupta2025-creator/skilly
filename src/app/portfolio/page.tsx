@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Download, ShieldCheck, Code, FileText, PenTool, Calendar, CheckCircle2, Clock, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { MOCK_PROJECTS, MOCK_SKILLS, SKILL_CATEGORIES } from "@/lib/mock-data";
@@ -12,6 +12,30 @@ export default function Portfolio() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [view, setView] = useState<"skills" | "projects" | "timeline">("skills");
+  const [githubProjects, setGithubProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch("https://api.github.com/users/vatsalgupta2025-creator/repos")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const formattedRepos = data.map((repo) => ({
+            id: `GH-${repo.id}`,
+            title: repo.name.replace(/-/g, ' '),
+            description: repo.description || "No description provided.",
+            category: repo.language || "Open Source",
+            skills: repo.topics && repo.topics.length > 0 ? repo.topics : [(repo.language || "Code")],
+            uploadedAt: repo.created_at ? repo.created_at.split('T')[0] : "2026-03-31",
+            status: "verified",
+            files: [],
+            evaluation: null,
+            html_url: repo.html_url
+          }));
+          setGithubProjects(formattedRepos);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const filteredSkills = useMemo(() => {
     return MOCK_SKILLS.filter((skill) => {
@@ -22,12 +46,14 @@ export default function Portfolio() {
   }, [searchQuery, selectedCategory]);
 
   const filteredProjects = useMemo(() => {
-    return MOCK_PROJECTS.filter((project) => {
-      const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const allProjects = [...githubProjects, ...MOCK_PROJECTS];
+    return allProjects.filter((project) => {
+      const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            (project.description || "").toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === "All" || project.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, githubProjects]);
 
   const sortedTimeline = useMemo(() => {
     return [...MOCK_SKILLS].sort((a, b) => new Date(b.verifiedAt).getTime() - new Date(a.verifiedAt).getTime());
@@ -53,7 +79,7 @@ export default function Portfolio() {
                 Verified Identity
               </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-2">Alex_Dev.</h1>
+            <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-2">VATSAL GUPTA</h1>
             <p className="font-mono text-neutral-400 text-sm">
               Identity hash: 0x8a92f...c32 &middot; Proofs Minted: {MOCK_SKILLS.length} &middot; Projects: {MOCK_PROJECTS.length}
             </p>
@@ -154,14 +180,21 @@ export default function Portfolio() {
                   {expandedProject === project.id && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} className="border-t border-border-subtle p-5 space-y-6">
                       <div className="flex flex-wrap gap-2">
-                        {project.skills.map((skill) => (
+                        {project.skills.map((skill: string) => (
                           <SkillBadge key={skill} name={skill} level={project.category} size="sm" showLevel={false} />
                         ))}
                       </div>
+                      {project.html_url && (
+                        <div className="pt-2">
+                          <a href={project.html_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 h-8 px-4 bg-surface border border-border-subtle text-foreground font-mono text-[10px] uppercase tracking-widest hover:border-neon-cyan transition-colors">
+                            <Code className="w-3 h-3" /> View Repository
+                          </a>
+                        </div>
+                      )}
                       <div>
                         <h4 className="font-mono text-xs text-neutral-500 uppercase tracking-widest mb-3">Files</h4>
                         <div className="space-y-2">
-                          {project.files.map((file) => (
+                          {project.files?.map((file: any) => (
                             <div key={file.name} className="flex items-center gap-3 py-2 px-3 bg-obsidian border border-border-subtle">
                               {file.type === "code" ? <Code className="w-3.5 h-3.5 text-neon-cyan" /> : file.type === "document" ? <FileText className="w-3.5 h-3.5 text-neon-green" /> : <PenTool className="w-3.5 h-3.5 text-neon-magenta" />}
                               <span className="font-mono text-xs text-neutral-300 flex-1">{file.name}</span>
@@ -188,7 +221,7 @@ export default function Portfolio() {
                             ))}
                           </div>
                           <div className="space-y-2">
-                            {project.evaluation.feedback.map((fb, j) => (
+                            {project.evaluation.feedback.map((fb: any, j: number) => (
                               <div key={j} className={`flex gap-3 py-2 px-3 bg-obsidian border-l-2 ${fb.severity === "positive" ? "border-l-neon-green" : "border-l-yellow-500"} border border-border-subtle`}>
                                 <span className="font-mono text-[10px] text-neon-cyan uppercase whitespace-nowrap">{fb.agent}</span>
                                 <span className="font-mono text-xs text-neutral-400">{fb.finding}</span>
